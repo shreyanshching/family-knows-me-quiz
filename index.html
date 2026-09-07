@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Likely Scam 😁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-admin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-participant {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-participant:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .modal-button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .modal-button:hover {
+            background: #764ba2;
+        }
+
+        .error {
+            color: #f5576c;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>Likely Scam 😁</h1>
+            <p class="subtitle">How well do they know you?</p>
+            <div class="button-group">
+                <button class="btn-admin" onclick="openAdminLogin()">Admin Login</button>
+                <button class="btn-participant" onclick="openParticipantLogin()">Participate</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeAdminLogin()">×</button>
+            <h2>Admin Login</h2>
+            <div class="form-group">
+                <label for="adminPassword">Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter admin password">
+            </div>
+            <button class="modal-button" onclick="loginAdmin()">Login</button>
+            <p class="error" id="adminError"></p>
+        </div>
+    </div>
+
+    <!-- Participant Login Modal -->
+    <div id="participantModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeParticipantLogin()">×</button>
+            <h2>Participate</h2>
+            <div class="form-group">
+                <label for="participantName">Your Name:</label>
+                <input type="text" id="participantName" placeholder="Enter your name">
+            </div>
+            <button class="modal-button" onclick="loginParticipant()">Start Quiz</button>
+            <p class="error" id="participantError"></p>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = '9026267144';
+
+        function openAdminLogin() {
+            document.getElementById('adminModal').style.display = 'block';
+            document.getElementById('adminError').textContent = '';
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+            document.getElementById('adminError').textContent = '';
+        }
+
+        function openParticipantLogin() {
+            document.getElementById('participantModal').style.display = 'block';
+            document.getElementById('participantError').textContent = '';
+        }
+
+        function closeParticipantLogin() {
+            document.getElementById('participantModal').style.display = 'none';
+            document.getElementById('participantName').value = '';
+            document.getElementById('participantError').textContent = '';
+        }
+
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                sessionStorage.setItem('userRole', 'admin');
+                window.location.href = 'admin.html';
+            } else {
+                document.getElementById('adminError').textContent = 'Incorrect password!';
+            }
+        }
+
+        function loginParticipant() {
+            const name = document.getElementById('participantName').value.trim();
+            if (name === '') {
+                document.getElementById('participantError').textContent = 'Please enter your name!';
+                return;
+            }
+            sessionStorage.setItem('userRole', 'participant');
+            sessionStorage.setItem('participantName', name);
+            window.location.href = 'quiz.html';
+        }
+
+        window.onclick = function(event) {
+            const adminModal = document.getElementById('adminModal');
+            const participantModal = document.getElementById('participantModal');
+            if (event.target === adminModal) {
+                closeAdminLogin();
+            }
+            if (event.target === participantModal) {
+                closeParticipantLogin();
+            }
+        }
+    </script>
+</body>
+</html>
