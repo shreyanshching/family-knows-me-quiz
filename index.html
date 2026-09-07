@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Likely Scam 😁</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
     <style>
         * {
             margin: 0;
@@ -800,6 +802,32 @@
             line-height: 1.6;
         }
 
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .next-btn {
+            background: #667eea;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .next-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .next-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -999,128 +1027,98 @@
         </div>
     </div>
 
-    <!-- QUIZ PAGE -->
+    <!-- PARTICIPANT QUIZ PAGE -->
     <div id="quizPage" style="display: none;">
-        <!-- Matrix Loading Screen -->
-        <div id="loadingScreen" class="loading-screen" style="display: none;">
-            <div class="matrix-background" id="matrixBg"></div>
-            <div class="loading-content">
-                <div class="hacked-message" id="hackedMsg">YOU HAVE BEEN HACKED</div>
-                <div class="loading-text" id="loadingText">Initializing Quiz System...</div>
-                <div class="joke-message" id="jokeMsg" style="display: none;">Just Kidding! 😄</div>
-                <div class="presented-by" id="presentedBy" style="display: none;">Presented by: Bachu Singh 🎬</div>
-            </div>
-        </div>
-
         <div class="container">
             <div class="quiz-header">
                 <h1>Likely Scam 😁</h1>
-                <p id="participantName"></p>
+                <p id="participantNameDisplay"></p>
             </div>
-
-            <div id="noQuestionsContainer" style="display: none;">
-                <div class="no-questions-error">
-                    <h2>❌ No Questions Available</h2>
-                    <p>The admin hasn't created any questions yet. Please ask them to add questions first before you can take the quiz.</p>
-                    <button class="btn btn-primary" onclick="backToHome()">Back to Home</button>
+            <div class="progress-bar">
+                <div class="progress-text">
+                    <span>Progress</span>
+                    <span id="progressIndicator">0/0</span>
                 </div>
-            </div>
-
-            <div id="quizContainer" style="display: none;">
-                <div class="progress-bar">
-                    <div class="progress-text">
-                        <span>Question <span id="currentQuestion">0</span> of <span id="totalQuestions">0</span></span>
-                        <span id="scoreDisplay">Score: 0</span>
-                    </div>
-                    <div class="progress-fill">
-                        <div class="progress-fill-bar" id="progressBar" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="question-card" id="questionCard">
-                    <div class="question-text" id="questionText"></div>
-                    <div class="options" id="optionsContainer"></div>
-                    <div class="button-group">
-                        <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">← Previous</button>
-                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
-                    </div>
+                <div class="progress-fill">
+                    <div class="progress-fill-bar" id="progressBar" style="width: 0%"></div>
                 </div>
             </div>
-        </div>
-
-        <!-- Results Screen -->
-        <div id="resultsScreen" style="display: none;">
-            <div class="container">
-                <div class="question-card">
-                    <div class="results-container">
-                        <h2 id="resultTitle">Quiz Completed! 🎉</h2>
-                        <div class="score-circle">
-                            <div class="score-number" id="finalScore">0</div>
-                            <div class="score-text">Correct</div>
-                        </div>
-                        <div class="score-percentage" id="percentage">0%</div>
-                        <div class="message" id="resultMessage"></div>
-                        
-                        <div class="results-details">
-                            <p>
-                                <span>Total Questions:</span>
-                                <strong id="detailTotal">0</strong>
-                            </p>
-                            <p>
-                                <span>Correct Answers:</span>
-                                <strong id="detailCorrect">0</strong>
-                            </p>
-                            <p>
-                                <span>Wrong Answers:</span>
-                                <strong id="detailWrong">0</strong>
-                            </p>
-                        </div>
-
-                        <button class="btn btn-primary leaderboard-btn" onclick="viewLeaderboard()">View Leaderboard 🏆</button>
-                        <button class="btn btn-secondary" onclick="backToHome()" style="margin-left: 10px; margin-top: 10px;">Back to Home</button>
-                    </div>
-                </div>
+            <div class="quiz-container">
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <button class="btn next-btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
             </div>
         </div>
     </div>
 
-    <!-- Leaderboard Modal -->
-    <div id="leaderboardModal" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="color: #333; font-size: 1.8em; margin: 0;">🏆 Leaderboard</h2>
-                <button class="close-btn" onclick="closeLeaderboard()">×</button>
+    <!-- RESULTS PAGE -->
+    <div id="resultsPage" style="display: none;">
+        <div class="container">
+            <div class="results-container">
+                <h2>Quiz Complete! 🎉</h2>
+                <div class="score-circle">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-text">/ <span id="totalQuestions2">0</span></div>
+                </div>
+                <div class="score-percentage" id="scorePercentage">0%</div>
+                <p class="message" id="resultMessage"></p>
+                <div class="results-details">
+                    <p><span>Correct Answers:</span> <span id="correctCount">0</span></p>
+                    <p><span>Wrong Answers:</span> <span id="wrongCount">0</span></p>
+                    <p><span>Accuracy:</span> <span id="accuracyPercent">0%</span></p>
+                </div>
+                <button class="btn leaderboard-btn" onclick="goToLeaderboard()">View Leaderboard</button>
+                <button class="btn btn-secondary" style="margin-left: 10px;" onclick="logout()">Back to Home</button>
             </div>
-            <div id="leaderboardContent"></div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD PAGE -->
+    <div id="leaderboardPage" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <h1>🏆 Leaderboard</h1>
+                <button class="logout-btn" onclick="logout()">Back to Home</button>
+            </div>
+            <div class="question-card">
+                <h3>Top Performers</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Participants</div>
+                        <div class="stat-number" id="leaderboardParticipants">0</div>
+                    </div>
+                </div>
+                <div id="leaderboardListDisplay"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        const MAX_QUESTIONS = 20;
-        const ADMIN_PASSWORD = '9026267144';
-        const MEDALS = ['🥇', '🥈', '🥉'];
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBvQhH-8fA5lPM8LQQ0W8x-dP9K4qX6rWc",
+            authDomain: "family-knows-me-quiz.firebaseapp.com",
+            databaseURL: "https://family-knows-me-quiz-default-rtdb.firebaseio.com",
+            projectId: "family-knows-me-quiz",
+            storageBucket: "family-knows-me-quiz.appspot.com",
+            messagingSenderId: "537261947316",
+            appId: "1:537261947316:web:9f8c5d7e4b2c1a0f9d8e"
+        };
 
-        let currentPage = 'login';
-        let currentRole = '';
-        let currentQuestionIndex = 0;
-        let questions = [];
-        let answers = [];
-        let score = 0;
-        let participantName = '';
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        // PAGE NAVIGATION
-        function showPage(page) {
-            document.getElementById('loginPage').style.display = page === 'login' ? 'block' : 'none';
-            document.getElementById('adminPage').style.display = page === 'admin' ? 'block' : 'none';
-            document.getElementById('quizPage').style.display = page === 'quiz' ? 'block' : 'none';
-            currentPage = page;
-        }
+        // Global Variables
+        let adminPassword = "admin123"; // Change this to your desired password
+        let currentUser = null;
+        let currentQuestion = 0;
+        let userAnswers = [];
+        let allQuestions = [];
 
-        // ADMIN LOGIN
+        // UI Functions
         function openAdminLogin() {
             document.getElementById('adminModal').style.display = 'block';
-            document.getElementById('adminError').textContent = '';
-            document.getElementById('adminPassword').value = '';
         }
 
         function closeAdminLogin() {
@@ -1129,23 +1127,8 @@
             document.getElementById('adminError').textContent = '';
         }
 
-        function loginAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                currentRole = 'admin';
-                loadQuestions();
-                showPage('admin');
-                closeAdminLogin();
-            } else {
-                document.getElementById('adminError').textContent = 'Incorrect password!';
-            }
-        }
-
-        // PARTICIPANT LOGIN
         function openParticipantLogin() {
             document.getElementById('participantModal').style.display = 'block';
-            document.getElementById('participantError').textContent = '';
-            document.getElementById('participantName').value = '';
         }
 
         function closeParticipantLogin() {
@@ -1154,42 +1137,60 @@
             document.getElementById('participantError').textContent = '';
         }
 
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === adminPassword) {
+                currentUser = { role: 'admin' };
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('adminPage').style.display = 'block';
+                closeAdminLogin();
+                loadQuestions();
+                loadResults();
+                loadLeaderboard();
+            } else {
+                document.getElementById('adminError').textContent = 'Incorrect password!';
+            }
+        }
+
         function loginParticipant() {
             const name = document.getElementById('participantName').value.trim();
             if (name === '') {
                 document.getElementById('participantError').textContent = 'Please enter your name!';
                 return;
             }
-            currentRole = 'participant';
-            participantName = name;
-            document.getElementById('participantName').textContent = name;
-            showPage('quiz');
+            currentUser = { role: 'participant', name: name };
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('quizPage').style.display = 'block';
             closeParticipantLogin();
-            initializeQuiz();
+            startQuiz();
         }
 
-        // ADMIN FUNCTIONS
+        function logoutAdmin() {
+            logout();
+        }
+
+        function logout() {
+            currentUser = null;
+            currentQuestion = 0;
+            userAnswers = [];
+            allQuestions = [];
+            document.getElementById('adminPage').style.display = 'none';
+            document.getElementById('quizPage').style.display = 'none';
+            document.getElementById('resultsPage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+        }
+
         function switchAdminTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
-
-            if (tabName === 'manage') {
-                loadQuestions();
-            } else if (tabName === 'results') {
-                loadResults();
-            } else if (tabName === 'leaderboard') {
-                loadLeaderboard();
-            }
         }
 
+        // Firebase Functions
         function createQuestion() {
-            const questionText = document.getElementById('questionText').value.trim();
+            const question = document.getElementById('questionText').value.trim();
             const options = [
                 document.getElementById('option1').value.trim(),
                 document.getElementById('option2').value.trim(),
@@ -1198,43 +1199,26 @@
             ];
             const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
 
-            if (!questionText) {
-                alert('Please enter a question!');
-                return;
-            }
-            if (options.some(opt => opt === '')) {
-                alert('Please fill all options!');
-                return;
-            }
-            if (!correctAnswer) {
-                alert('Please select the correct answer!');
-                return;
-            }
-
-            let allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
-
-            if (allQuestions.length >= MAX_QUESTIONS) {
-                alert(`Maximum ${MAX_QUESTIONS} questions allowed!`);
+            if (!question || options.some(opt => !opt) || !correctAnswer) {
+                alert('Please fill in all fields!');
                 return;
             }
 
             const newQuestion = {
-                id: Date.now(),
-                text: questionText,
+                question: question,
                 options: options,
-                correct: parseInt(correctAnswer.value)
+                correctAnswer: parseInt(correctAnswer.value),
+                createdAt: new Date().toISOString()
             };
 
-            allQuestions.push(newQuestion);
-            localStorage.setItem('questions', JSON.stringify(allQuestions));
-
-            document.getElementById('createSuccess').classList.add('show');
-            setTimeout(() => {
-                document.getElementById('createSuccess').classList.remove('show');
-            }, 3000);
-
-            clearForm();
-            loadQuestions();
+            db.ref('questions').push(newQuestion).then(() => {
+                document.getElementById('createSuccess').classList.add('show');
+                setTimeout(() => {
+                    document.getElementById('createSuccess').classList.remove('show');
+                }, 3000);
+                clearForm();
+                loadQuestions();
+            });
         }
 
         function clearForm() {
@@ -1243,361 +1227,243 @@
             document.getElementById('option2').value = '';
             document.getElementById('option3').value = '';
             document.getElementById('option4').value = '';
-            document.querySelectorAll('input[name="correctAnswer"]').forEach(radio => {
-                radio.checked = false;
-            });
+            document.querySelectorAll('input[name="correctAnswer"]').forEach(el => el.checked = false);
         }
 
         function loadQuestions() {
-            const allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
+            db.ref('questions').on('value', snapshot => {
+                const data = snapshot.val();
+                allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
+                document.getElementById('totalQuestions').textContent = allQuestions.length;
+                displayQuestions();
+                displayResultsQuestions();
+            });
+        }
+
+        function displayQuestions() {
             const list = document.getElementById('questionsList');
-            const total = document.getElementById('totalQuestions');
-
-            total.textContent = allQuestions.length;
-
-            if (allQuestions.length === 0) {
-                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No questions created yet.</p>';
-                return;
-            }
-
-            list.innerHTML = allQuestions.map((q, index) => `
-                <div class="question-item">
+            list.innerHTML = '';
+            allQuestions.forEach(q => {
+                const div = document.createElement('div');
+                div.className = 'question-item';
+                div.innerHTML = `
                     <div class="question-info">
-                        <h4>Q${index + 1}: ${q.text}</h4>
-                        <p>A) ${q.options[0]}</p>
-                        <p>B) ${q.options[1]}</p>
-                        <p>C) ${q.options[2]}</p>
-                        <p>D) ${q.options[3]}</p>
-                        <p><strong>Correct: ${String.fromCharCode(65 + q.correct)}</strong></p>
+                        <h4>${q.question}</h4>
+                        <p>Options: ${q.options.length} | Correct: Option ${q.correctAnswer + 1}</p>
                     </div>
                     <div class="question-actions">
-                        <button class="btn btn-danger btn-small" onclick="deleteQuestion(${q.id})">Delete</button>
+                        <button class="btn btn-primary btn-small" onclick="editQuestion('${q.id}')">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteQuestion('${q.id}')">Delete</button>
                     </div>
-                </div>
-            `).join('');
+                `;
+                list.appendChild(div);
+            });
         }
 
         function deleteQuestion(id) {
             if (confirm('Delete this question?')) {
-                let allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
-                allQuestions = allQuestions.filter(q => q.id !== id);
-                localStorage.setItem('questions', JSON.stringify(allQuestions));
-                loadQuestions();
+                db.ref(`questions/${id}`).remove();
             }
         }
 
         function loadResults() {
-            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            db.ref('results').on('value', snapshot => {
+                const data = snapshot.val();
+                const results = data ? Object.values(data) : [];
+                document.getElementById('totalParticipants').textContent = results.length;
+                displayResults(results);
+            });
+        }
+
+        function displayResults(results) {
             const list = document.getElementById('resultsList');
-            const total = document.getElementById('totalParticipants');
-
-            total.textContent = results.length;
-
-            if (results.length === 0) {
-                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No results yet.</p>';
-                return;
-            }
-
-            list.innerHTML = results.map(r => `
-                <div class="question-item">
-                    <div class="question-info">
+            list.innerHTML = '';
+            results.forEach(r => {
+                const percentage = ((r.score / r.total) * 100).toFixed(1);
+                const div = document.createElement('div');
+                div.className = 'leaderboard-item';
+                div.innerHTML = `
+                    <div class="leaderboard-info">
                         <h4>${r.name}</h4>
-                        <p>Score: <strong>${r.score}/${r.total}</strong> (${Math.round((r.score/r.total)*100)}%)</p>
-                        <p style="font-size: 0.8em; color: #999;">Completed: ${new Date(r.completedAt).toLocaleString()}</p>
+                        <p>Completed: ${new Date(r.timestamp).toLocaleString()}</p>
                     </div>
-                </div>
-            `).join('');
+                    <div class="leaderboard-score">
+                        <div class="score-value">${r.score} / ${r.total}</div>
+                        <div class="percentage">${percentage}%</div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function displayResultsQuestions() {
+            const list = document.getElementById('resultsList');
+            if (!list.innerHTML.trim()) {
+                list.innerHTML = '<p style="text-align:center; color:#666;">No results yet</p>';
+            }
         }
 
         function loadLeaderboard() {
-            const results = JSON.parse(localStorage.getItem('results') || '[]');
-            const list = document.getElementById('leaderboardList');
-            const total = document.getElementById('leaderboardTotal');
+            db.ref('results').on('value', snapshot => {
+                const data = snapshot.val();
+                const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
+                document.getElementById('leaderboardTotal').textContent = results.length;
+                displayLeaderboard(results, 'leaderboardList');
+            });
+        }
 
-            total.textContent = results.length;
-
+        function displayLeaderboard(results, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
             if (results.length === 0) {
-                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No participants yet.</p>';
+                container.innerHTML = '<p style="text-align:center; color:#666;">No participants yet</p>';
                 return;
             }
-
-            const sorted = [...results].sort((a, b) => {
-                if (b.score !== a.score) return b.score - a.score;
-                return new Date(a.completedAt) - new Date(b.completedAt);
-            });
-
-            list.innerHTML = sorted.map((r, index) => {
-                const percentage = Math.round((r.score / r.total) * 100);
-                let medal = '';
+            results.slice(0, 10).forEach((r, index) => {
+                const percentage = ((r.score / r.total) * 100).toFixed(1);
                 let badgeClass = '';
+                if (index === 0) badgeClass = 'first';
+                else if (index === 1) badgeClass = 'second';
+                else if (index === 2) badgeClass = 'third';
 
-                if (index === 0) {
-                    medal = MEDALS[0];
-                    badgeClass = 'first';
-                } else if (index === 1) {
-                    medal = MEDALS[1];
-                    badgeClass = 'second';
-                } else if (index === 2) {
-                    medal = MEDALS[2];
-                    badgeClass = 'third';
-                }
-
-                return `
-                    <div class="leaderboard-item">
-                        <div class="rank-badge ${badgeClass}">
-                            ${medal || '#' + (index + 1)}
-                        </div>
-                        <div class="leaderboard-info">
-                            <h4>${r.name}</h4>
-                            <p>${new Date(r.completedAt).toLocaleString()}</p>
-                        </div>
-                        <div class="leaderboard-score">
-                            <div class="score-value">${r.score}/${r.total}</div>
-                            <div class="percentage">${percentage}%</div>
-                        </div>
+                const div = document.createElement('div');
+                div.className = 'leaderboard-item';
+                div.innerHTML = `
+                    <div class="rank-badge ${badgeClass}">${index + 1}</div>
+                    <div class="leaderboard-info">
+                        <h4>${r.name}</h4>
+                        <p>Accuracy: ${percentage}%</p>
+                    </div>
+                    <div class="leaderboard-score">
+                        <div class="score-value">${r.score} / ${r.total}</div>
+                        <div class="percentage">${percentage}%</div>
                     </div>
                 `;
-            }).join('');
+                container.appendChild(div);
+            });
         }
 
-        // QUIZ FUNCTIONS
-        function generateMatrixCode() {
-            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-            let code = '';
-            for (let i = 0; i < 1000; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
+        // Quiz Functions
+        function startQuiz() {
+            loadQuestions();
+            db.ref('questions').once('value', snapshot => {
+                const data = snapshot.val();
+                allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
+                
+                if (allQuestions.length === 0) {
+                    document.getElementById('quizPage').style.display = 'none';
+                    document.getElementById('loginPage').style.display = 'block';
+                    alert('No questions available yet. Please ask the admin to create questions.');
+                    return;
+                }
+                
+                userAnswers = new Array(allQuestions.length).fill(-1);
+                currentQuestion = 0;
+                displayQuestion();
+            });
         }
 
-        function createMatrixBackground() {
-            const bg = document.getElementById('matrixBg');
-            const columns = Math.floor(window.innerWidth / 20);
-            let matrixText = '';
-            for (let i = 0; i < columns * 30; i++) {
-                matrixText += generateMatrixCode().substring(0, 1) + '\n';
-            }
-            bg.textContent = matrixText;
-        }
-
-        function initializeQuiz() {
-            console.log('initializeQuiz called');
-            questions = JSON.parse(localStorage.getItem('questions') || '[]');
-            console.log('Questions loaded:', questions.length);
-
-            if (questions.length === 0) {
-                console.log('No questions available');
-                document.getElementById('noQuestionsContainer').style.display = 'block';
-                document.getElementById('quizContainer').style.display = 'none';
-                document.getElementById('loadingScreen').style.display = 'none';
+        function displayQuestion() {
+            if (currentQuestion >= allQuestions.length) {
+                submitQuiz();
                 return;
             }
 
-            document.getElementById('loadingScreen').style.display = 'flex';
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('noQuestionsContainer').style.display = 'none';
-            document.getElementById('resultsScreen').style.display = 'none';
-            
-            createMatrixBackground();
-
-            setTimeout(() => {
-                document.getElementById('hackedMsg').style.display = 'none';
-                document.getElementById('loadingText').style.display = 'none';
-                document.getElementById('jokeMsg').style.display = 'block';
-                document.getElementById('presentedBy').style.display = 'block';
-            }, 15000);
-
-            setTimeout(() => {
-                answers = new Array(questions.length).fill(null);
-                score = 0;
-                currentQuestionIndex = 0;
-                loadQuestion();
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('quizContainer').style.display = 'block';
-                console.log('Quiz ready to start');
-            }, 20000);
-        }
-
-        function loadQuestion() {
-            const question = questions[currentQuestionIndex];
-            document.getElementById('questionText').textContent = question.text;
-            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
-            document.getElementById('totalQuestions').textContent = questions.length;
+            const q = allQuestions[currentQuestion];
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('participantNameDisplay').textContent = currentUser.name;
+            document.getElementById('progressIndicator').textContent = `${currentQuestion + 1}/${allQuestions.length}`;
+            document.getElementById('progressBar').style.width = ((currentQuestion + 1) / allQuestions.length * 100) + '%';
 
             const container = document.getElementById('optionsContainer');
-            container.innerHTML = question.options.map((option, index) => {
-                const isSelected = answers[currentQuestionIndex] === index;
-                return `
-                    <label class="option ${isSelected ? 'selected' : ''}">
-                        <input type="radio" name="option" value="${index}" 
-                            ${isSelected ? 'checked' : ''} 
-                            onchange="selectAnswer(${index})">
-                        <label style="margin: 0;">${option}</label>
-                    </label>
+            container.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option' + (userAnswers[currentQuestion] === idx ? ' selected' : '');
+                div.innerHTML = `
+                    <input type="radio" name="option" value="${idx}" ${userAnswers[currentQuestion] === idx ? 'checked' : ''} onchange="selectOption(${idx})">
+                    <label>${opt}</label>
                 `;
-            }).join('');
+                container.appendChild(div);
+            });
 
-            updateProgress();
-            updateButtons();
+            document.getElementById('nextBtn').disabled = userAnswers[currentQuestion] === -1;
         }
 
-        function selectAnswer(index) {
-            answers[currentQuestionIndex] = index;
-            loadQuestion();
-        }
-
-        function updateProgress() {
-            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-            document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
-        }
-
-        function updateButtons() {
-            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
-            document.getElementById('nextBtn').disabled = answers[currentQuestionIndex] === null;
-
-            if (currentQuestionIndex === questions.length - 1) {
-                document.getElementById('nextBtn').textContent = 'Submit Quiz ✓';
-            } else {
-                document.getElementById('nextBtn').textContent = 'Next →';
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                loadQuestion();
-            }
+        function selectOption(idx) {
+            userAnswers[currentQuestion] = idx;
+            document.querySelectorAll('.option').forEach((el, i) => {
+                if (i === idx) el.classList.add('selected');
+                else el.classList.remove('selected');
+            });
+            document.getElementById('nextBtn').disabled = false;
         }
 
         function nextQuestion() {
-            if (answers[currentQuestionIndex] === null) {
-                alert('Please select an answer!');
-                return;
-            }
-
-            if (currentQuestionIndex === questions.length - 1) {
-                submitQuiz();
-            } else {
-                currentQuestionIndex++;
-                loadQuestion();
-            }
+            currentQuestion++;
+            displayQuestion();
         }
 
         function submitQuiz() {
-            score = 0;
-            for (let i = 0; i < questions.length; i++) {
-                if (answers[i] === questions[i].correct) {
-                    score++;
-                }
-            }
-
-            const result = {
-                name: participantName,
-                score: score,
-                total: questions.length,
-                completedAt: new Date().toISOString()
-            };
-
-            let results = JSON.parse(localStorage.getItem('results') || '[]');
-            results.push(result);
-            localStorage.setItem('results', JSON.stringify(results));
-
-            displayResults();
-            document.getElementById('quizContainer').style.display = 'none';
-            document.getElementById('resultsScreen').style.display = 'block';
-        }
-
-        function displayResults() {
-            const percentage = Math.round((score / questions.length) * 100);
-            let message = '';
-
-            if (percentage === 100) {
-                message = "🎯 Perfect Score! You know them so well!";
-            } else if (percentage >= 80) {
-                message = "🌟 Excellent! You know them very well!";
-            } else if (percentage >= 60) {
-                message = "👍 Good! You know them pretty well!";
-            } else if (percentage >= 40) {
-                message = "📚 Not bad! You could learn more about them!";
-            } else {
-                message = "💭 Looks like you need to spend more time together!";
-            }
-
-            document.getElementById('finalScore').textContent = score;
-            document.getElementById('percentage').textContent = percentage + '%';
-            document.getElementById('resultMessage').textContent = message;
-            document.getElementById('detailTotal').textContent = questions.length;
-            document.getElementById('detailCorrect').textContent = score;
-            document.getElementById('detailWrong').textContent = questions.length - score;
-        }
-
-        function viewLeaderboard() {
-            const results = JSON.parse(localStorage.getItem('results') || '[]');
-            const sorted = [...results].sort((a, b) => {
-                if (b.score !== a.score) return b.score - a.score;
-                return new Date(a.completedAt) - new Date(b.completedAt);
+            let score = 0;
+            allQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correctAnswer) score++;
             });
 
-            const content = document.getElementById('leaderboardContent');
-            if (sorted.length === 0) {
-                content.innerHTML = '<div style="text-align: center; color: #999; padding: 30px;">No scores yet.</div>';
-            } else {
-                content.innerHTML = sorted.map((r, index) => {
-                    const percentage = Math.round((r.score / r.total) * 100);
-                    let medal = '';
-                    let badgeClass = '';
+            const result = {
+                name: currentUser.name,
+                score: score,
+                total: allQuestions.length,
+                timestamp: new Date().toISOString()
+            };
 
-                    if (index === 0) {
-                        medal = MEDALS[0];
-                        badgeClass = 'first';
-                    } else if (index === 1) {
-                        medal = MEDALS[1];
-                        badgeClass = 'second';
-                    } else if (index === 2) {
-                        medal = MEDALS[2];
-                        badgeClass = 'third';
-                    }
-
-                    return `
-                        <div class="leaderboard-item">
-                            <div class="rank-badge ${badgeClass}">
-                                ${medal || '#' + (index + 1)}
-                            </div>
-                            <div class="leaderboard-info">
-                                <h4>${r.name}</h4>
-                                <div style="font-size: 0.9em; color: #666;">${percentage}% (${r.score}/${r.total})</div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            document.getElementById('leaderboardModal').style.display = 'block';
+            db.ref('results').push(result).then(() => {
+                showResults(score);
+            });
         }
 
-        function closeLeaderboard() {
-            document.getElementById('leaderboardModal').style.display = 'none';
+        function showResults(score) {
+            const total = allQuestions.length;
+            const percentage = ((score / total) * 100).toFixed(1);
+            
+            document.getElementById('scoreNumber').textContent = score;
+            document.getElementById('totalQuestions2').textContent = total;
+            document.getElementById('scorePercentage').textContent = percentage + '%';
+            document.getElementById('correctCount').textContent = score;
+            document.getElementById('wrongCount').textContent = total - score;
+            document.getElementById('accuracyPercent').textContent = percentage + '%';
+
+            let message = '';
+            if (percentage >= 90) message = 'Outstanding! You know them really well! 🌟';
+            else if (percentage >= 70) message = 'Great job! You did excellent! 🎉';
+            else if (percentage >= 50) message = 'Good effort! Keep learning more! 👍';
+            else message = 'Nice try! Better luck next time! 💪';
+            
+            document.getElementById('resultMessage').textContent = message;
+
+            document.getElementById('quizPage').style.display = 'none';
+            document.getElementById('resultsPage').style.display = 'block';
         }
 
-        function logoutAdmin() {
-            currentRole = '';
-            showPage('login');
+        function goToLeaderboard() {
+            loadLeaderboard();
+            db.ref('results').once('value', snapshot => {
+                const data = snapshot.val();
+                const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
+                document.getElementById('leaderboardParticipants').textContent = results.length;
+                displayLeaderboard(results, 'leaderboardListDisplay');
+            });
+            
+            document.getElementById('resultsPage').style.display = 'none';
+            document.getElementById('leaderboardPage').style.display = 'block';
         }
 
-        function backToHome() {
-            currentRole = '';
-            showPage('login');
-        }
-
+        // Close modals when clicking outside
         window.onclick = function(event) {
             const adminModal = document.getElementById('adminModal');
             const participantModal = document.getElementById('participantModal');
-            const leaderboardModal = document.getElementById('leaderboardModal');
-
-            if (event.target === adminModal) closeAdminLogin();
-            if (event.target === participantModal) closeParticipantLogin();
-            if (event.target === leaderboardModal) closeLeaderboard();
+            if (event.target === adminModal) adminModal.style.display = 'none';
+            if (event.target === participantModal) participantModal.style.display = 'none';
         }
     </script>
 </body>
