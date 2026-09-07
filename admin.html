@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Likely Scam 😁</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2em;
+        }
+
+        .logout-btn {
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d63447;
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .question-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .options-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .option-input {
+            position: relative;
+        }
+
+        .correct-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .correct-check input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f5576c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d63447;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #ccc;
+        }
+
+        .questions-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .question-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .error {
+            background: #f5576c;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        /* Leaderboard Styles */
+        .leaderboard-container {
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .rank-badge {
+            font-size: 1.5em;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .rank-badge.first {
+            color: #ffd700;
+            font-size: 2em;
+        }
+
+        .rank-badge.second {
+            color: #c0c0c0;
+            font-size: 2em;
+        }
+
+        .rank-badge.third {
+            color: #cd7f32;
+            font-size: 2em;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .leaderboard-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .leaderboard-score {
+            text-align: right;
+            min-width: 150px;
+        }
+
+        .leaderboard-score .score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .leaderboard-score .score-label {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .leaderboard-score .percentage {
+            font-size: 1.2em;
+            color: #4caf50;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .medal {
+            font-size: 1.8em;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .options-group {
+                grid-template-columns: 1fr;
+            }
+
+            .question-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .question-actions {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .leaderboard-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .leaderboard-score {
+                width: 100%;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('create')">Create Question</button>
+            <button class="tab-button" onclick="switchTab('manage')">Manage Questions</button>
+            <button class="tab-button" onclick="switchTab('results')">Results</button>
+            <button class="tab-button" onclick="switchTab('leaderboard')">🏆 Leaderboard</button>
+        </div>
+
+        <!-- Create Question Tab -->
+        <div id="create" class="tab-content active">
+            <div class="question-card">
+                <div class="success" id="createSuccess">Question created successfully!</div>
+                <div class="error" id="createError"></div>
+                
+                <h3>Create New Question</h3>
+                <div class="form-group">
+                    <label for="questionText">Question:</label>
+                    <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+                </div>
+
+                <div class="options-group">
+                    <div class="form-group">
+                        <label for="option1">Option 1:</label>
+                        <input type="text" id="option1" placeholder="Enter option 1">
+                    </div>
+                    <div class="form-group">
+                        <label for="option2">Option 2:</label>
+                        <input type="text" id="option2" placeholder="Enter option 2">
+                    </div>
+                    <div class="form-group">
+                        <label for="option3">Option 3:</label>
+                        <input type="text" id="option3" placeholder="Enter option 3">
+                    </div>
+                    <div class="form-group">
+                        <label for="option4">Option 4:</label>
+                        <input type="text" id="option4" placeholder="Enter option 4">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Correct Answer:</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label class="correct-check">
+                            <input type="radio" name="correctAnswer" value="0"> Option 1
+                        </label>
+                        <label class="correct-check">
+                            <input type="radio" name="correctAnswer" value="1"> Option 2
+                        </label>
+                        <label class="correct-check">
+                            <input type="radio" name="correctAnswer" value="2"> Option 3
+                        </label>
+                        <label class="correct-check">
+                            <input type="radio" name="correctAnswer" value="3"> Option 4
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" onclick="createQuestion()">Add Question</button>
+                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Questions Tab -->
+        <div id="manage" class="tab-content">
+            <div class="question-card">
+                <h3>Questions List</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Questions</div>
+                        <div class="stat-number" id="totalQuestions">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Max Questions</div>
+                        <div class="stat-number">20</div>
+                    </div>
+                </div>
+
+                <div class="questions-list" id="questionsList"></div>
+            </div>
+        </div>
+
+        <!-- Results Tab -->
+        <div id="results" class="tab-content">
+            <div class="question-card">
+                <h3>Participants Results</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Participants</div>
+                        <div class="stat-number" id="totalParticipants">0</div>
+                    </div>
+                </div>
+                <div id="resultsList"></div>
+            </div>
+        </div>
+
+        <!-- Leaderboard Tab -->
+        <div id="leaderboard" class="tab-content">
+            <div class="question-card">
+                <h3>🏆 Leaderboard - Top Performers</h3>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Participants</div>
+                        <div class="stat-number" id="leaderboardTotal">0</div>
+                    </div>
+                </div>
+                <div class="leaderboard-container" id="leaderboardList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const MAX_QUESTIONS = 20;
+        const MEDALS = ['🥇', '🥈', '🥉'];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadQuestions();
+            loadResults();
+        });
+
+        function checkAuth() {
+            if (sessionStorage.getItem('userRole') !== 'admin') {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'manage') {
+                loadQuestions();
+            } else if (tabName === 'results') {
+                loadResults();
+            } else if (tabName === 'leaderboard') {
+                loadLeaderboard();
+            }
+        }
+
+        function createQuestion() {
+            const questionText = document.getElementById('questionText').value.trim();
+            const options = [
+                document.getElementById('option1').value.trim(),
+                document.getElementById('option2').value.trim(),
+                document.getElementById('option3').value.trim(),
+                document.getElementById('option4').value.trim()
+            ];
+            const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+
+            const createError = document.getElementById('createError');
+            createError.textContent = '';
+
+            // Validation
+            if (!questionText) {
+                createError.textContent = 'Please enter a question!';
+                createError.classList.add('show');
+                return;
+            }
+
+            if (options.some(opt => opt === '')) {
+                createError.textContent = 'Please fill all options!';
+                createError.classList.add('show');
+                return;
+            }
+
+            if (!correctAnswer) {
+                createError.textContent = 'Please select the correct answer!';
+                createError.classList.add('show');
+                return;
+            }
+
+            // Get existing questions
+            let questions = JSON.parse(localStorage.getItem('questions') || '[]');
+
+            if (questions.length >= MAX_QUESTIONS) {
+                createError.textContent = `Maximum ${MAX_QUESTIONS} questions allowed!`;
+                createError.classList.add('show');
+                return;
+            }
+
+            // Add new question
+            const newQuestion = {
+                id: Date.now(),
+                text: questionText,
+                options: options,
+                correct: parseInt(correctAnswer.value)
+            };
+
+            questions.push(newQuestion);
+            localStorage.setItem('questions', JSON.stringify(questions));
+
+            // Show success message
+            document.getElementById('createSuccess').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('createSuccess').classList.remove('show');
+            }, 3000);
+
+            clearForm();
+            loadQuestions();
+        }
+
+        function clearForm() {
+            document.getElementById('questionText').value = '';
+            document.getElementById('option1').value = '';
+            document.getElementById('option2').value = '';
+            document.getElementById('option3').value = '';
+            document.getElementById('option4').value = '';
+            document.querySelectorAll('input[name="correctAnswer"]').forEach(radio => {
+                radio.checked = false;
+            });
+            document.getElementById('createError').textContent = '';
+            document.getElementById('createError').classList.remove('show');
+        }
+
+        function loadQuestions() {
+            const questions = JSON.parse(localStorage.getItem('questions') || '[]');
+            const list = document.getElementById('questionsList');
+            const total = document.getElementById('totalQuestions');
+
+            total.textContent = questions.length;
+
+            if (questions.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No questions created yet. Start by creating your first question!</p>';
+                return;
+            }
+
+            list.innerHTML = questions.map((q, index) => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <h4>Q${index + 1}: ${q.text}</h4>
+                        <p>A) ${q.options[0]}</p>
+                        <p>B) ${q.options[1]}</p>
+                        <p>C) ${q.options[2]}</p>
+                        <p>D) ${q.options[3]}</p>
+                        <p><strong>Correct Answer: ${String.fromCharCode(65 + q.correct)}</strong></p>
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn btn-danger btn-small" onclick="deleteQuestion(${q.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('Are you sure you want to delete this question?')) {
+                let questions = JSON.parse(localStorage.getItem('questions') || '[]');
+                questions = questions.filter(q => q.id !== id);
+                localStorage.setItem('questions', JSON.stringify(questions));
+                loadQuestions();
+            }
+        }
+
+        function loadResults() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const list = document.getElementById('resultsList');
+            const total = document.getElementById('totalParticipants');
+
+            total.textContent = results.length;
+
+            if (results.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No results yet. Waiting for participants!</p>';
+                return;
+            }
+
+            list.innerHTML = results.map(r => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <h4>${r.name}</h4>
+                        <p>Score: <strong>${r.score}/${r.total}</strong> (${Math.round((r.score/r.total)*100)}%)</p>
+                        <p style="font-size: 0.8em; color: #999;">Completed on: ${new Date(r.completedAt).toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadLeaderboard() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const list = document.getElementById('leaderboardList');
+            const total = document.getElementById('leaderboardTotal');
+
+            total.textContent = results.length;
+
+            if (results.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No participants yet. The leaderboard will be updated once someone completes the quiz!</p>';
+                return;
+            }
+
+            // Sort by score (descending) then by time (ascending)
+            const sorted = [...results].sort((a, b) => {
+                if (b.score !== a.score) {
+                    return b.score - a.score;
+                }
+                return new Date(a.completedAt) - new Date(b.completedAt);
+            });
+
+            list.innerHTML = sorted.map((r, index) => {
+                const percentage = Math.round((r.score / r.total) * 100);
+                let medal = '';
+                let badgeClass = '';
+
+                if (index === 0) {
+                    medal = MEDALS[0];
+                    badgeClass = 'first';
+                } else if (index === 1) {
+                    medal = MEDALS[1];
+                    badgeClass = 'second';
+                } else if (index === 2) {
+                    medal = MEDALS[2];
+                    badgeClass = 'third';
+                }
+
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank-badge ${badgeClass}">
+                            ${medal || '#' + (index + 1)}
+                        </div>
+                        <div class="leaderboard-info">
+                            <h4>${r.name}</h4>
+                            <p>Completed on: ${new Date(r.completedAt).toLocaleString()}</p>
+                        </div>
+                        <div class="leaderboard-score">
+                            <div class="score-value">${r.score}/${r.total}</div>
+                            <div class="score-label">Correct Answers</div>
+                            <div class="percentage">${percentage}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
