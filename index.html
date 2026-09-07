@@ -721,21 +721,6 @@
             transform: none;
         }
 
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -773,7 +758,7 @@
 </head>
 <body>
     <!-- LOGIN PAGE -->
-    <div id="loginPage">
+    <div id="loginPage" style="display: block;">
         <div class="container">
             <div class="login-box">
                 <h1>Likely Scam 😁</h1>
@@ -794,7 +779,7 @@
                     <label for="adminPassword">Password:</label>
                     <input type="password" id="adminPassword" placeholder="Enter admin password">
                 </div>
-                <button class="modal-button" onclick="loginAdmin()">Login</button>
+                <button class="modal-button" type="button" onclick="loginAdmin()">Login</button>
                 <p class="error" id="adminError"></p>
             </div>
         </div>
@@ -808,7 +793,7 @@
                     <label for="participantName">Your Name:</label>
                     <input type="text" id="participantName" placeholder="Enter your name">
                 </div>
-                <button class="modal-button" onclick="loginParticipant()">Start Quiz</button>
+                <button class="modal-button" type="button" onclick="loginParticipant()">Start Quiz</button>
                 <p class="error" id="participantError"></p>
             </div>
         </div>
@@ -877,8 +862,8 @@
                     </div>
 
                     <div class="button-group">
-                        <button class="btn btn-primary" onclick="createQuestion()">Add Question</button>
-                        <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                        <button class="btn btn-primary" type="button" onclick="createQuestion()">Add Question</button>
+                        <button class="btn btn-secondary" type="button" onclick="clearForm()">Clear</button>
                     </div>
                 </div>
             </div>
@@ -950,7 +935,7 @@
             <div class="quiz-container">
                 <div class="question-text" id="questionText"></div>
                 <div class="options" id="optionsContainer"></div>
-                <button class="btn next-btn" id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+                <button class="btn next-btn" id="nextBtn" type="button" onclick="nextQuestion()" disabled>Next Question</button>
             </div>
         </div>
     </div>
@@ -971,8 +956,8 @@
                     <p><span>Wrong Answers:</span> <span id="wrongCount">0</span></p>
                     <p><span>Accuracy:</span> <span id="accuracyPercent">0%</span></p>
                 </div>
-                <button class="btn leaderboard-btn" onclick="goToLeaderboard()">View Leaderboard</button>
-                <button class="btn btn-secondary" style="margin-left: 10px;" onclick="logout()">Back to Home</button>
+                <button class="btn leaderboard-btn" type="button" onclick="goToLeaderboard()">View Leaderboard</button>
+                <button class="btn btn-secondary" style="margin-left: 10px;" type="button" onclick="logout()">Back to Home</button>
             </div>
         </div>
     </div>
@@ -982,7 +967,7 @@
         <div class="container">
             <div class="header">
                 <h1>🏆 Leaderboard</h1>
-                <button class="logout-btn" onclick="logout()">Back to Home</button>
+                <button class="logout-btn" type="button" onclick="logout()">Back to Home</button>
             </div>
             <div class="question-card">
                 <h3>Top Performers</h3>
@@ -998,7 +983,7 @@
     </div>
 
     <script>
-        // Firebase Configuration - Fixed
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA3rKjX_8K7L4mN9OqP2RsT3UvW4xYzAbCdE",
             authDomain: "quiz-app-e4f5c.firebaseapp.com",
@@ -1011,10 +996,9 @@
 
         // Initialize Firebase
         let db = null;
-        
-        // Initialize Firebase with proper error handling
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
+        console.log('Firebase initialized');
 
         // Global Variables
         let adminPassword = "admin123";
@@ -1025,26 +1009,31 @@
 
         // UI Functions
         function openAdminLogin() {
+            console.log('Opening admin login');
             document.getElementById('adminModal').style.display = 'block';
         }
 
         function closeAdminLogin() {
+            console.log('Closing admin login');
             document.getElementById('adminModal').style.display = 'none';
             document.getElementById('adminPassword').value = '';
             document.getElementById('adminError').textContent = '';
         }
 
         function openParticipantLogin() {
+            console.log('Opening participant login');
             document.getElementById('participantModal').style.display = 'block';
         }
 
         function closeParticipantLogin() {
+            console.log('Closing participant login');
             document.getElementById('participantModal').style.display = 'none';
             document.getElementById('participantName').value = '';
             document.getElementById('participantError').textContent = '';
         }
 
         function loginAdmin() {
+            console.log('Admin login attempt');
             const password = document.getElementById('adminPassword').value;
             if (password === adminPassword) {
                 currentUser = { role: 'admin' };
@@ -1060,6 +1049,7 @@
         }
 
         function loginParticipant() {
+            console.log('Participant login attempt');
             const name = document.getElementById('participantName').value.trim();
             if (name === '') {
                 document.getElementById('participantError').textContent = 'Please enter your name!';
@@ -1097,6 +1087,7 @@
 
         // Firebase Functions
         function createQuestion() {
+            console.log('Creating question');
             const question = document.getElementById('questionText').value.trim();
             const options = [
                 document.getElementById('option1').value.trim(),
@@ -1119,6 +1110,7 @@
             };
 
             db.ref('questions').push(newQuestion).then(() => {
+                console.log('Question created successfully');
                 document.getElementById('createSuccess').classList.add('show');
                 setTimeout(() => {
                     document.getElementById('createSuccess').classList.remove('show');
@@ -1141,13 +1133,12 @@
         }
 
         function loadQuestions() {
+            console.log('Loading questions');
             db.ref('questions').on('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
                 document.getElementById('totalQuestions').textContent = allQuestions.length;
                 displayQuestions();
-            }, error => {
-                console.error('Error loading questions:', error);
             });
         }
 
@@ -1167,7 +1158,7 @@
                         <p>Options: ${q.options.length} | Correct: Option ${q.correctAnswer + 1}</p>
                     </div>
                     <div class="question-actions">
-                        <button class="btn btn-danger btn-small" onclick="deleteQuestion('${q.id}')">Delete</button>
+                        <button class="btn btn-danger btn-small" type="button" onclick="deleteQuestion('${q.id}')">Delete</button>
                     </div>
                 `;
                 list.appendChild(div);
@@ -1176,21 +1167,17 @@
 
         function deleteQuestion(id) {
             if (confirm('Delete this question?')) {
-                db.ref(`questions/${id}`).remove().catch(error => {
-                    console.error('Error:', error);
-                    alert('Error deleting question');
-                });
+                db.ref(`questions/${id}`).remove();
             }
         }
 
         function loadResults() {
+            console.log('Loading results');
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data) : [];
                 document.getElementById('totalParticipants').textContent = results.length;
                 displayResults(results);
-            }, error => {
-                console.error('Error loading results:', error);
             });
         }
 
@@ -1220,13 +1207,12 @@
         }
 
         function loadLeaderboard() {
+            console.log('Loading leaderboard');
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
                 document.getElementById('leaderboardTotal').textContent = results.length;
                 displayLeaderboard(results, 'leaderboardList');
-            }, error => {
-                console.error('Error loading leaderboard:', error);
             });
         }
 
@@ -1263,6 +1249,7 @@
 
         // Quiz Functions
         function startQuiz() {
+            console.log('Starting quiz');
             db.ref('questions').once('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
@@ -1276,9 +1263,6 @@
                 userAnswers = new Array(allQuestions.length).fill(-1);
                 currentQuestion = 0;
                 displayQuestion();
-            }).catch(error => {
-                console.error('Error:', error);
-                alert('Error loading quiz: ' + error.message);
             });
         }
 
