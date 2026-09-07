@@ -695,111 +695,19 @@
             transform: translateY(-2px);
         }
 
-        /* MATRIX LOADING */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            overflow: hidden;
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
         }
 
-        .matrix-background {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0.3;
-            font-family: monospace;
-            color: #0f0;
-            font-size: 1.2em;
-            line-height: 1.2;
-            white-space: pre;
-            overflow: hidden;
-        }
-
-        .loading-content {
-            position: relative;
-            z-index: 100;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .hacked-message {
-            color: #0f0;
-            font-size: 4em;
-            font-weight: bold;
-            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-            font-family: 'Courier New', monospace;
-            animation: glow-pulse 0.5s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes glow-pulse {
-            0%, 100% {
-                text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
-            }
-            50% {
-                text-shadow: 0 0 20px #0f0, 0 0 40px #0f0, 0 0 60px #0f0;
-            }
-        }
-
-        .loading-text {
-            color: #0f0;
-            font-size: 1.5em;
-            font-family: 'Courier New', monospace;
-            margin-top: 20px;
-        }
-
-        .joke-message {
-            color: #0f0;
-            font-size: 2em;
-            font-weight: bold;
-            text-shadow: 0 0 10px #0f0;
-            font-family: 'Courier New', monospace;
-            margin-top: 20px;
-            animation: fadeIn 1s ease-in;
-        }
-
-        .presented-by {
-            color: #0f0;
-            font-size: 1.2em;
-            font-family: 'Courier New', monospace;
-            margin-top: 30px;
-            animation: fadeIn 1s ease-in 0.5s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .no-questions-error {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            margin: 50px auto;
-            max-width: 500px;
-        }
-
-        .no-questions-error h2 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .no-questions-error p {
-            color: #666;
-            margin-bottom: 20px;
-            line-height: 1.6;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         .quiz-container {
@@ -850,10 +758,6 @@
             .leaderboard-item {
                 flex-direction: column;
                 align-items: flex-start;
-            }
-
-            .hacked-message {
-                font-size: 2.5em;
             }
 
             .score-circle {
@@ -1106,11 +1010,17 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+            console.log('Firebase initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+        }
 
         // Global Variables
-        let adminPassword = "admin123"; // Change this to your desired password
+        let adminPassword = "admin123";
         let currentUser = null;
         let currentQuestion = 0;
         let userAnswers = [];
@@ -1190,6 +1100,11 @@
 
         // Firebase Functions
         function createQuestion() {
+            if (!db) {
+                alert('Database connection not ready. Please refresh the page.');
+                return;
+            }
+
             const question = document.getElementById('questionText').value.trim();
             const options = [
                 document.getElementById('option1').value.trim(),
@@ -1218,6 +1133,9 @@
                 }, 3000);
                 clearForm();
                 loadQuestions();
+            }).catch(error => {
+                console.error('Error creating question:', error);
+                alert('Error saving question. Please try again.');
             });
         }
 
@@ -1231,18 +1149,22 @@
         }
 
         function loadQuestions() {
+            if (!db) return;
             db.ref('questions').on('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
                 document.getElementById('totalQuestions').textContent = allQuestions.length;
                 displayQuestions();
-                displayResultsQuestions();
             });
         }
 
         function displayQuestions() {
             const list = document.getElementById('questionsList');
             list.innerHTML = '';
+            if (allQuestions.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#666;">No questions yet</p>';
+                return;
+            }
             allQuestions.forEach(q => {
                 const div = document.createElement('div');
                 div.className = 'question-item';
@@ -1252,7 +1174,6 @@
                         <p>Options: ${q.options.length} | Correct: Option ${q.correctAnswer + 1}</p>
                     </div>
                     <div class="question-actions">
-                        <button class="btn btn-primary btn-small" onclick="editQuestion('${q.id}')">Edit</button>
                         <button class="btn btn-danger btn-small" onclick="deleteQuestion('${q.id}')">Delete</button>
                     </div>
                 `;
@@ -1267,6 +1188,7 @@
         }
 
         function loadResults() {
+            if (!db) return;
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data) : [];
@@ -1278,6 +1200,10 @@
         function displayResults(results) {
             const list = document.getElementById('resultsList');
             list.innerHTML = '';
+            if (results.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#666;">No results yet</p>';
+                return;
+            }
             results.forEach(r => {
                 const percentage = ((r.score / r.total) * 100).toFixed(1);
                 const div = document.createElement('div');
@@ -1296,14 +1222,8 @@
             });
         }
 
-        function displayResultsQuestions() {
-            const list = document.getElementById('resultsList');
-            if (!list.innerHTML.trim()) {
-                list.innerHTML = '<p style="text-align:center; color:#666;">No results yet</p>';
-            }
-        }
-
         function loadLeaderboard() {
+            if (!db) return;
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
@@ -1345,21 +1265,26 @@
 
         // Quiz Functions
         function startQuiz() {
-            loadQuestions();
+            if (!db) {
+                alert('Database connection not ready. Please refresh the page.');
+                return;
+            }
             db.ref('questions').once('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
                 
                 if (allQuestions.length === 0) {
-                    document.getElementById('quizPage').style.display = 'none';
-                    document.getElementById('loginPage').style.display = 'block';
                     alert('No questions available yet. Please ask the admin to create questions.');
+                    logout();
                     return;
                 }
                 
                 userAnswers = new Array(allQuestions.length).fill(-1);
                 currentQuestion = 0;
                 displayQuestion();
+            }).catch(error => {
+                console.error('Error loading questions:', error);
+                alert('Error loading questions. Please try again.');
             });
         }
 
@@ -1405,6 +1330,11 @@
         }
 
         function submitQuiz() {
+            if (!db) {
+                alert('Database connection not ready.');
+                return;
+            }
+
             let score = 0;
             allQuestions.forEach((q, idx) => {
                 if (userAnswers[idx] === q.correctAnswer) score++;
@@ -1419,6 +1349,9 @@
 
             db.ref('results').push(result).then(() => {
                 showResults(score);
+            }).catch(error => {
+                console.error('Error submitting quiz:', error);
+                alert('Error saving results. Please try again.');
             });
         }
 
@@ -1446,7 +1379,7 @@
         }
 
         function goToLeaderboard() {
-            loadLeaderboard();
+            if (!db) return;
             db.ref('results').once('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
