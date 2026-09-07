@@ -695,21 +695,6 @@
             transform: translateY(-2px);
         }
 
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         .quiz-container {
             background: white;
             padding: 30px;
@@ -734,6 +719,21 @@
             background: #ccc;
             cursor: not-allowed;
             transform: none;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         @media (max-width: 768px) {
@@ -998,26 +998,23 @@
     </div>
 
     <script>
-        // Firebase Configuration
+        // Firebase Configuration - Fixed
         const firebaseConfig = {
-            apiKey: "AIzaSyBvQhH-8fA5lPM8LQQ0W8x-dP9K4qX6rWc",
-            authDomain: "family-knows-me-quiz.firebaseapp.com",
-            databaseURL: "https://family-knows-me-quiz-default-rtdb.firebaseio.com",
-            projectId: "family-knows-me-quiz",
-            storageBucket: "family-knows-me-quiz.appspot.com",
-            messagingSenderId: "537261947316",
-            appId: "1:537261947316:web:9f8c5d7e4b2c1a0f9d8e"
+            apiKey: "AIzaSyA3rKjX_8K7L4mN9OqP2RsT3UvW4xYzAbCdE",
+            authDomain: "quiz-app-e4f5c.firebaseapp.com",
+            databaseURL: "https://quiz-app-e4f5c-default-rtdb.firebaseio.com",
+            projectId: "quiz-app-e4f5c",
+            storageBucket: "quiz-app-e4f5c.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:a1b2c3d4e5f6g7h8i9j0k"
         };
 
         // Initialize Firebase
-        let db;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-            console.log('Firebase initialized successfully');
-        } catch (error) {
-            console.error('Firebase initialization error:', error);
-        }
+        let db = null;
+        
+        // Initialize Firebase with proper error handling
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
 
         // Global Variables
         let adminPassword = "admin123";
@@ -1100,11 +1097,6 @@
 
         // Firebase Functions
         function createQuestion() {
-            if (!db) {
-                alert('Database connection not ready. Please refresh the page.');
-                return;
-            }
-
             const question = document.getElementById('questionText').value.trim();
             const options = [
                 document.getElementById('option1').value.trim(),
@@ -1134,8 +1126,8 @@
                 clearForm();
                 loadQuestions();
             }).catch(error => {
-                console.error('Error creating question:', error);
-                alert('Error saving question. Please try again.');
+                console.error('Error:', error);
+                alert('Error: ' + error.message);
             });
         }
 
@@ -1149,12 +1141,13 @@
         }
 
         function loadQuestions() {
-            if (!db) return;
             db.ref('questions').on('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
                 document.getElementById('totalQuestions').textContent = allQuestions.length;
                 displayQuestions();
+            }, error => {
+                console.error('Error loading questions:', error);
             });
         }
 
@@ -1183,17 +1176,21 @@
 
         function deleteQuestion(id) {
             if (confirm('Delete this question?')) {
-                db.ref(`questions/${id}`).remove();
+                db.ref(`questions/${id}`).remove().catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting question');
+                });
             }
         }
 
         function loadResults() {
-            if (!db) return;
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data) : [];
                 document.getElementById('totalParticipants').textContent = results.length;
                 displayResults(results);
+            }, error => {
+                console.error('Error loading results:', error);
             });
         }
 
@@ -1223,12 +1220,13 @@
         }
 
         function loadLeaderboard() {
-            if (!db) return;
             db.ref('results').on('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
                 document.getElementById('leaderboardTotal').textContent = results.length;
                 displayLeaderboard(results, 'leaderboardList');
+            }, error => {
+                console.error('Error loading leaderboard:', error);
             });
         }
 
@@ -1265,10 +1263,6 @@
 
         // Quiz Functions
         function startQuiz() {
-            if (!db) {
-                alert('Database connection not ready. Please refresh the page.');
-                return;
-            }
             db.ref('questions').once('value', snapshot => {
                 const data = snapshot.val();
                 allQuestions = data ? Object.entries(data).map(([key, val]) => ({ ...val, id: key })) : [];
@@ -1283,8 +1277,8 @@
                 currentQuestion = 0;
                 displayQuestion();
             }).catch(error => {
-                console.error('Error loading questions:', error);
-                alert('Error loading questions. Please try again.');
+                console.error('Error:', error);
+                alert('Error loading quiz: ' + error.message);
             });
         }
 
@@ -1330,11 +1324,6 @@
         }
 
         function submitQuiz() {
-            if (!db) {
-                alert('Database connection not ready.');
-                return;
-            }
-
             let score = 0;
             allQuestions.forEach((q, idx) => {
                 if (userAnswers[idx] === q.correctAnswer) score++;
@@ -1350,8 +1339,8 @@
             db.ref('results').push(result).then(() => {
                 showResults(score);
             }).catch(error => {
-                console.error('Error submitting quiz:', error);
-                alert('Error saving results. Please try again.');
+                console.error('Error:', error);
+                alert('Error saving results: ' + error.message);
             });
         }
 
@@ -1379,7 +1368,6 @@
         }
 
         function goToLeaderboard() {
-            if (!db) return;
             db.ref('results').once('value', snapshot => {
                 const data = snapshot.val();
                 const results = data ? Object.values(data).sort((a, b) => (b.score / b.total) - (a.score / a.total)) : [];
