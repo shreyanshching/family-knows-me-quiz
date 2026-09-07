@@ -104,6 +104,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.3s ease;
+            overflow-y: auto;
         }
 
         @keyframes fadeIn {
@@ -215,6 +216,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .header h1 {
@@ -362,6 +365,12 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .question-info {
+            flex: 1;
         }
 
         .question-info h4 {
@@ -434,6 +443,7 @@
             align-items: center;
             gap: 20px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
         }
 
         .rank-badge {
@@ -501,6 +511,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .quiz-header h1 {
@@ -527,6 +539,7 @@
             margin-bottom: 10px;
             color: #666;
             font-weight: 500;
+            flex-wrap: wrap;
         }
 
         .progress-fill {
@@ -559,7 +572,7 @@
 
         .option {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             padding: 15px;
             background: #f5f5f5;
             border: 2px solid transparent;
@@ -576,9 +589,11 @@
 
         .option input[type="radio"] {
             margin-right: 15px;
+            margin-top: 5px;
             width: 20px;
             height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .option label {
@@ -597,13 +612,6 @@
 
         .option.selected label {
             color: white;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: space-between;
-            margin-top: 30px;
         }
 
         /* RESULTS SCREEN */
@@ -670,6 +678,7 @@
             margin: 10px 0;
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .leaderboard-btn {
@@ -714,19 +723,11 @@
             overflow: hidden;
         }
 
-        .matrix-text {
-            animation: matrix-scroll 20s linear infinite;
-        }
-
-        @keyframes matrix-scroll {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-        }
-
         .loading-content {
             position: relative;
             z-index: 100;
             text-align: center;
+            padding: 20px;
         }
 
         .hacked-message {
@@ -773,15 +774,41 @@
             animation: fadeIn 1s ease-in 0.5s both;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .no-questions-error {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin: 50px auto;
+            max-width: 500px;
+        }
+
+        .no-questions-error h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .no-questions-error p {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
-                gap: 15px;
+                align-items: flex-start;
             }
 
             .quiz-header {
                 flex-direction: column;
-                gap: 15px;
+                align-items: flex-start;
             }
 
             .button-group {
@@ -901,7 +928,7 @@
 
                     <div class="form-group">
                         <label>Correct Answer:</label>
-                        <div style="display: flex; gap: 20px;">
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
                             <label class="correct-check">
                                 <input type="radio" name="correctAnswer" value="0"> Option 1
                             </label>
@@ -991,22 +1018,32 @@
                 <p id="participantName"></p>
             </div>
 
-            <div class="progress-bar">
-                <div class="progress-text">
-                    <span>Question <span id="currentQuestion">0</span> of <span id="totalQuestions">0</span></span>
-                    <span id="scoreDisplay">Score: 0</span>
-                </div>
-                <div class="progress-fill">
-                    <div class="progress-fill-bar" id="progressBar" style="width: 0%"></div>
+            <div id="noQuestionsContainer" style="display: none;">
+                <div class="no-questions-error">
+                    <h2>❌ No Questions Available</h2>
+                    <p>The admin hasn't created any questions yet. Please ask them to add questions first before you can take the quiz.</p>
+                    <button class="btn btn-primary" onclick="backToHome()">Back to Home</button>
                 </div>
             </div>
 
-            <div class="question-card" id="questionCard">
-                <div class="question-text" id="questionText"></div>
-                <div class="options" id="optionsContainer"></div>
-                <div class="button-group">
-                    <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">← Previous</button>
-                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+            <div id="quizContainer" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-text">
+                        <span>Question <span id="currentQuestion">0</span> of <span id="totalQuestions">0</span></span>
+                        <span id="scoreDisplay">Score: 0</span>
+                    </div>
+                    <div class="progress-fill">
+                        <div class="progress-fill-bar" id="progressBar" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="question-card" id="questionCard">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options" id="optionsContainer"></div>
+                    <div class="button-group">
+                        <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">← Previous</button>
+                        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1040,7 +1077,7 @@
                         </div>
 
                         <button class="btn btn-primary leaderboard-btn" onclick="viewLeaderboard()">View Leaderboard 🏆</button>
-                        <button class="btn btn-secondary" onclick="backToHome()" style="margin-left: 10px;">Back to Home</button>
+                        <button class="btn btn-secondary" onclick="backToHome()" style="margin-left: 10px; margin-top: 10px;">Back to Home</button>
                     </div>
                 </div>
             </div>
@@ -1083,6 +1120,7 @@
         function openAdminLogin() {
             document.getElementById('adminModal').style.display = 'block';
             document.getElementById('adminError').textContent = '';
+            document.getElementById('adminPassword').value = '';
         }
 
         function closeAdminLogin() {
@@ -1107,6 +1145,7 @@
         function openParticipantLogin() {
             document.getElementById('participantModal').style.display = 'block';
             document.getElementById('participantError').textContent = '';
+            document.getElementById('participantName').value = '';
         }
 
         function closeParticipantLogin() {
@@ -1342,9 +1381,23 @@
         }
 
         function initializeQuiz() {
+            console.log('initializeQuiz called');
+            questions = JSON.parse(localStorage.getItem('questions') || '[]');
+            console.log('Questions loaded:', questions.length);
+
+            if (questions.length === 0) {
+                console.log('No questions available');
+                document.getElementById('noQuestionsContainer').style.display = 'block';
+                document.getElementById('quizContainer').style.display = 'none';
+                document.getElementById('loadingScreen').style.display = 'none';
+                return;
+            }
+
             document.getElementById('loadingScreen').style.display = 'flex';
-            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('noQuestionsContainer').style.display = 'none';
             document.getElementById('resultsScreen').style.display = 'none';
+            
             createMatrixBackground();
 
             setTimeout(() => {
@@ -1355,19 +1408,13 @@
             }, 15000);
 
             setTimeout(() => {
-                questions = JSON.parse(localStorage.getItem('questions') || '[]');
-
-                if (questions.length === 0) {
-                    alert('No questions available!');
-                    showPage('login');
-                    return;
-                }
-
                 answers = new Array(questions.length).fill(null);
                 score = 0;
                 currentQuestionIndex = 0;
                 loadQuestion();
                 document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('quizContainer').style.display = 'block';
+                console.log('Quiz ready to start');
             }, 20000);
         }
 
@@ -1457,7 +1504,7 @@
             localStorage.setItem('results', JSON.stringify(results));
 
             displayResults();
-            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('quizContainer').style.display = 'none';
             document.getElementById('resultsScreen').style.display = 'block';
         }
 
