@@ -15,17 +15,15 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
             padding: 20px;
         }
 
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* LOGIN PAGE */
         .login-box {
             background: white;
             border-radius: 15px;
@@ -33,6 +31,8 @@
             padding: 40px;
             text-align: center;
             animation: slideIn 0.5s ease-out;
+            max-width: 500px;
+            margin: 50px auto;
         }
 
         @keyframes slideIn {
@@ -46,13 +46,13 @@
             }
         }
 
-        h1 {
+        .login-box h1 {
             color: #333;
             margin-bottom: 10px;
             font-size: 2.5em;
         }
 
-        .subtitle {
+        .login-box .subtitle {
             color: #666;
             margin-bottom: 40px;
             font-size: 1.1em;
@@ -107,12 +107,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
@@ -170,16 +166,17 @@
             font-weight: 500;
         }
 
-        input {
+        input, textarea, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 1em;
+            font-family: inherit;
             transition: border-color 0.3s;
         }
 
-        input:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -207,51 +204,882 @@
             margin-top: 10px;
             font-size: 0.9em;
         }
+
+        /* ADMIN DASHBOARD */
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2em;
+        }
+
+        .logout-btn {
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d63447;
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .question-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .question-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .options-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .correct-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .correct-check input[type="radio"] {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #f5576c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d63447;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #ccc;
+        }
+
+        .questions-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .question-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .question-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .success {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success.show {
+            display: block;
+        }
+
+        .leaderboard-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .rank-badge {
+            font-size: 1.5em;
+            font-weight: bold;
+            min-width: 50px;
+            text-align: center;
+            color: #667eea;
+        }
+
+        .rank-badge.first {
+            color: #ffd700;
+            font-size: 2em;
+        }
+
+        .rank-badge.second {
+            color: #c0c0c0;
+            font-size: 2em;
+        }
+
+        .rank-badge.third {
+            color: #cd7f32;
+            font-size: 2em;
+        }
+
+        .leaderboard-info {
+            flex: 1;
+        }
+
+        .leaderboard-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .leaderboard-info p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .leaderboard-score {
+            text-align: right;
+            min-width: 150px;
+        }
+
+        .leaderboard-score .score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .leaderboard-score .percentage {
+            font-size: 1.2em;
+            color: #4caf50;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        /* QUIZ SCREEN */
+        .quiz-header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-header h1 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .quiz-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .progress-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .progress-fill {
+            width: 100%;
+            height: 10px;
+            background: #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f5f5f5;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            background: #efefef;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .option label {
+            flex: 1;
+            cursor: pointer;
+            color: #333;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option.selected label {
+            color: white;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        /* RESULTS SCREEN */
+        .results-container {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .results-container h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .score-number {
+            font-size: 3em;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-text {
+            color: white;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        .score-percentage {
+            font-size: 2em;
+            color: #333;
+            margin: 20px 0;
+            font-weight: 600;
+        }
+
+        .message {
+            font-size: 1.2em;
+            color: #666;
+            margin: 20px 0;
+            line-height: 1.6;
+        }
+
+        .results-details {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .results-details p {
+            color: #666;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .leaderboard-btn {
+            background: #4caf50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1em;
+        }
+
+        .leaderboard-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        /* MATRIX LOADING */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .matrix-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            font-family: monospace;
+            color: #0f0;
+            font-size: 1.2em;
+            line-height: 1.2;
+            white-space: pre;
+            overflow: hidden;
+        }
+
+        .matrix-text {
+            animation: matrix-scroll 20s linear infinite;
+        }
+
+        @keyframes matrix-scroll {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .loading-content {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+        }
+
+        .hacked-message {
+            color: #0f0;
+            font-size: 4em;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            font-family: 'Courier New', monospace;
+            animation: glow-pulse 0.5s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            }
+            50% {
+                text-shadow: 0 0 20px #0f0, 0 0 40px #0f0, 0 0 60px #0f0;
+            }
+        }
+
+        .loading-text {
+            color: #0f0;
+            font-size: 1.5em;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+        }
+
+        .joke-message {
+            color: #0f0;
+            font-size: 2em;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0f0;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            animation: fadeIn 1s ease-in;
+        }
+
+        .presented-by {
+            color: #0f0;
+            font-size: 1.2em;
+            font-family: 'Courier New', monospace;
+            margin-top: 30px;
+            animation: fadeIn 1s ease-in 0.5s both;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .quiz-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .options-group {
+                grid-template-columns: 1fr;
+            }
+
+            .leaderboard-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hacked-message {
+                font-size: 2.5em;
+            }
+
+            .score-circle {
+                width: 150px;
+                height: 150px;
+            }
+
+            .score-number {
+                font-size: 2em;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <h1>Likely Scam 😁</h1>
-            <p class="subtitle">How well do they know you?</p>
-            <div class="button-group">
-                <button class="btn-admin" onclick="openAdminLogin()">Admin Login</button>
-                <button class="btn-participant" onclick="openParticipantLogin()">Participate</button>
+    <!-- LOGIN PAGE -->
+    <div id="loginPage">
+        <div class="container">
+            <div class="login-box">
+                <h1>Likely Scam 😁</h1>
+                <p class="subtitle">How well do they know you?</p>
+                <div class="button-group">
+                    <button class="btn-admin" onclick="openAdminLogin()">Admin Login</button>
+                    <button class="btn-participant" onclick="openParticipantLogin()">Participate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Login Modal -->
+        <div id="adminModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeAdminLogin()">×</button>
+                <h2>Admin Login</h2>
+                <div class="form-group">
+                    <label for="adminPassword">Password:</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password">
+                </div>
+                <button class="modal-button" onclick="loginAdmin()">Login</button>
+                <p class="error" id="adminError"></p>
+            </div>
+        </div>
+
+        <!-- Participant Login Modal -->
+        <div id="participantModal" class="modal">
+            <div class="modal-content">
+                <button class="close-btn" onclick="closeParticipantLogin()">×</button>
+                <h2>Participate</h2>
+                <div class="form-group">
+                    <label for="participantName">Your Name:</label>
+                    <input type="text" id="participantName" placeholder="Enter your name">
+                </div>
+                <button class="modal-button" onclick="loginParticipant()">Start Quiz</button>
+                <p class="error" id="participantError"></p>
             </div>
         </div>
     </div>
 
-    <!-- Admin Login Modal -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeAdminLogin()">×</button>
-            <h2>Admin Login</h2>
-            <div class="form-group">
-                <label for="adminPassword">Password:</label>
-                <input type="password" id="adminPassword" placeholder="Enter admin password">
+    <!-- ADMIN DASHBOARD -->
+    <div id="adminPage" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <h1>📊 Admin Dashboard</h1>
+                <button class="logout-btn" onclick="logoutAdmin()">Logout</button>
             </div>
-            <button class="modal-button" onclick="loginAdmin()">Login</button>
-            <p class="error" id="adminError"></p>
+
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchAdminTab('create')">Create Question</button>
+                <button class="tab-button" onclick="switchAdminTab('manage')">Manage Questions</button>
+                <button class="tab-button" onclick="switchAdminTab('results')">Results</button>
+                <button class="tab-button" onclick="switchAdminTab('leaderboard')">🏆 Leaderboard</button>
+            </div>
+
+            <!-- Create Question Tab -->
+            <div id="create" class="tab-content active">
+                <div class="question-card">
+                    <div class="success" id="createSuccess">Question created successfully!</div>
+                    <h3>Create New Question</h3>
+                    <div class="form-group">
+                        <label for="questionText">Question:</label>
+                        <textarea id="questionText" placeholder="Enter your question here..."></textarea>
+                    </div>
+
+                    <div class="options-group">
+                        <div class="form-group">
+                            <label for="option1">Option 1:</label>
+                            <input type="text" id="option1" placeholder="Enter option 1">
+                        </div>
+                        <div class="form-group">
+                            <label for="option2">Option 2:</label>
+                            <input type="text" id="option2" placeholder="Enter option 2">
+                        </div>
+                        <div class="form-group">
+                            <label for="option3">Option 3:</label>
+                            <input type="text" id="option3" placeholder="Enter option 3">
+                        </div>
+                        <div class="form-group">
+                            <label for="option4">Option 4:</label>
+                            <input type="text" id="option4" placeholder="Enter option 4">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correct Answer:</label>
+                        <div style="display: flex; gap: 20px;">
+                            <label class="correct-check">
+                                <input type="radio" name="correctAnswer" value="0"> Option 1
+                            </label>
+                            <label class="correct-check">
+                                <input type="radio" name="correctAnswer" value="1"> Option 2
+                            </label>
+                            <label class="correct-check">
+                                <input type="radio" name="correctAnswer" value="2"> Option 3
+                            </label>
+                            <label class="correct-check">
+                                <input type="radio" name="correctAnswer" value="3"> Option 4
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="createQuestion()">Add Question</button>
+                        <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manage Questions Tab -->
+            <div id="manage" class="tab-content">
+                <div class="question-card">
+                    <h3>Questions List</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Questions</div>
+                            <div class="stat-number" id="totalQuestions">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Max Questions</div>
+                            <div class="stat-number">20</div>
+                        </div>
+                    </div>
+                    <div class="questions-list" id="questionsList"></div>
+                </div>
+            </div>
+
+            <!-- Results Tab -->
+            <div id="results" class="tab-content">
+                <div class="question-card">
+                    <h3>Participants Results</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Participants</div>
+                            <div class="stat-number" id="totalParticipants">0</div>
+                        </div>
+                    </div>
+                    <div id="resultsList"></div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div id="leaderboard" class="tab-content">
+                <div class="question-card">
+                    <h3>🏆 Leaderboard - Top Performers</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Participants</div>
+                            <div class="stat-number" id="leaderboardTotal">0</div>
+                        </div>
+                    </div>
+                    <div class="leaderboard-container" id="leaderboardList"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Participant Login Modal -->
-    <div id="participantModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" onclick="closeParticipantLogin()">×</button>
-            <h2>Participate</h2>
-            <div class="form-group">
-                <label for="participantName">Your Name:</label>
-                <input type="text" id="participantName" placeholder="Enter your name">
+    <!-- QUIZ PAGE -->
+    <div id="quizPage" style="display: none;">
+        <!-- Matrix Loading Screen -->
+        <div id="loadingScreen" class="loading-screen" style="display: none;">
+            <div class="matrix-background" id="matrixBg"></div>
+            <div class="loading-content">
+                <div class="hacked-message" id="hackedMsg">YOU HAVE BEEN HACKED</div>
+                <div class="loading-text" id="loadingText">Initializing Quiz System...</div>
+                <div class="joke-message" id="jokeMsg" style="display: none;">Just Kidding! 😄</div>
+                <div class="presented-by" id="presentedBy" style="display: none;">Presented by: Bachu Singh 🎬</div>
             </div>
-            <button class="modal-button" onclick="loginParticipant()">Start Quiz</button>
-            <p class="error" id="participantError"></p>
+        </div>
+
+        <div class="container">
+            <div class="quiz-header">
+                <h1>Likely Scam 😁</h1>
+                <p id="participantName"></p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-text">
+                    <span>Question <span id="currentQuestion">0</span> of <span id="totalQuestions">0</span></span>
+                    <span id="scoreDisplay">Score: 0</span>
+                </div>
+                <div class="progress-fill">
+                    <div class="progress-fill-bar" id="progressBar" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="question-card" id="questionCard">
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="button-group">
+                    <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">← Previous</button>
+                    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Next →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" style="display: none;">
+            <div class="container">
+                <div class="question-card">
+                    <div class="results-container">
+                        <h2 id="resultTitle">Quiz Completed! 🎉</h2>
+                        <div class="score-circle">
+                            <div class="score-number" id="finalScore">0</div>
+                            <div class="score-text">Correct</div>
+                        </div>
+                        <div class="score-percentage" id="percentage">0%</div>
+                        <div class="message" id="resultMessage"></div>
+                        
+                        <div class="results-details">
+                            <p>
+                                <span>Total Questions:</span>
+                                <strong id="detailTotal">0</strong>
+                            </p>
+                            <p>
+                                <span>Correct Answers:</span>
+                                <strong id="detailCorrect">0</strong>
+                            </p>
+                            <p>
+                                <span>Wrong Answers:</span>
+                                <strong id="detailWrong">0</strong>
+                            </p>
+                        </div>
+
+                        <button class="btn btn-primary leaderboard-btn" onclick="viewLeaderboard()">View Leaderboard 🏆</button>
+                        <button class="btn btn-secondary" onclick="backToHome()" style="margin-left: 10px;">Back to Home</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #333; font-size: 1.8em; margin: 0;">🏆 Leaderboard</h2>
+                <button class="close-btn" onclick="closeLeaderboard()">×</button>
+            </div>
+            <div id="leaderboardContent"></div>
         </div>
     </div>
 
     <script>
+        const MAX_QUESTIONS = 20;
         const ADMIN_PASSWORD = '9026267144';
+        const MEDALS = ['🥇', '🥈', '🥉'];
 
+        let currentPage = 'login';
+        let currentRole = '';
+        let currentQuestionIndex = 0;
+        let questions = [];
+        let answers = [];
+        let score = 0;
+        let participantName = '';
+
+        // PAGE NAVIGATION
+        function showPage(page) {
+            document.getElementById('loginPage').style.display = page === 'login' ? 'block' : 'none';
+            document.getElementById('adminPage').style.display = page === 'admin' ? 'block' : 'none';
+            document.getElementById('quizPage').style.display = page === 'quiz' ? 'block' : 'none';
+            currentPage = page;
+        }
+
+        // ADMIN LOGIN
         function openAdminLogin() {
             document.getElementById('adminModal').style.display = 'block';
             document.getElementById('adminError').textContent = '';
@@ -263,6 +1091,19 @@
             document.getElementById('adminError').textContent = '';
         }
 
+        function loginAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                currentRole = 'admin';
+                loadQuestions();
+                showPage('admin');
+                closeAdminLogin();
+            } else {
+                document.getElementById('adminError').textContent = 'Incorrect password!';
+            }
+        }
+
+        // PARTICIPANT LOGIN
         function openParticipantLogin() {
             document.getElementById('participantModal').style.display = 'block';
             document.getElementById('participantError').textContent = '';
@@ -274,36 +1115,442 @@
             document.getElementById('participantError').textContent = '';
         }
 
-        function loginAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                sessionStorage.setItem('userRole', 'admin');
-                window.location.href = 'admin.html';
-            } else {
-                document.getElementById('adminError').textContent = 'Incorrect password!';
-            }
-        }
-
         function loginParticipant() {
             const name = document.getElementById('participantName').value.trim();
             if (name === '') {
                 document.getElementById('participantError').textContent = 'Please enter your name!';
                 return;
             }
-            sessionStorage.setItem('userRole', 'participant');
-            sessionStorage.setItem('participantName', name);
-            window.location.href = 'quiz.html';
+            currentRole = 'participant';
+            participantName = name;
+            document.getElementById('participantName').textContent = name;
+            showPage('quiz');
+            closeParticipantLogin();
+            initializeQuiz();
+        }
+
+        // ADMIN FUNCTIONS
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'manage') {
+                loadQuestions();
+            } else if (tabName === 'results') {
+                loadResults();
+            } else if (tabName === 'leaderboard') {
+                loadLeaderboard();
+            }
+        }
+
+        function createQuestion() {
+            const questionText = document.getElementById('questionText').value.trim();
+            const options = [
+                document.getElementById('option1').value.trim(),
+                document.getElementById('option2').value.trim(),
+                document.getElementById('option3').value.trim(),
+                document.getElementById('option4').value.trim()
+            ];
+            const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+
+            if (!questionText) {
+                alert('Please enter a question!');
+                return;
+            }
+            if (options.some(opt => opt === '')) {
+                alert('Please fill all options!');
+                return;
+            }
+            if (!correctAnswer) {
+                alert('Please select the correct answer!');
+                return;
+            }
+
+            let allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
+
+            if (allQuestions.length >= MAX_QUESTIONS) {
+                alert(`Maximum ${MAX_QUESTIONS} questions allowed!`);
+                return;
+            }
+
+            const newQuestion = {
+                id: Date.now(),
+                text: questionText,
+                options: options,
+                correct: parseInt(correctAnswer.value)
+            };
+
+            allQuestions.push(newQuestion);
+            localStorage.setItem('questions', JSON.stringify(allQuestions));
+
+            document.getElementById('createSuccess').classList.add('show');
+            setTimeout(() => {
+                document.getElementById('createSuccess').classList.remove('show');
+            }, 3000);
+
+            clearForm();
+            loadQuestions();
+        }
+
+        function clearForm() {
+            document.getElementById('questionText').value = '';
+            document.getElementById('option1').value = '';
+            document.getElementById('option2').value = '';
+            document.getElementById('option3').value = '';
+            document.getElementById('option4').value = '';
+            document.querySelectorAll('input[name="correctAnswer"]').forEach(radio => {
+                radio.checked = false;
+            });
+        }
+
+        function loadQuestions() {
+            const allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
+            const list = document.getElementById('questionsList');
+            const total = document.getElementById('totalQuestions');
+
+            total.textContent = allQuestions.length;
+
+            if (allQuestions.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No questions created yet.</p>';
+                return;
+            }
+
+            list.innerHTML = allQuestions.map((q, index) => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <h4>Q${index + 1}: ${q.text}</h4>
+                        <p>A) ${q.options[0]}</p>
+                        <p>B) ${q.options[1]}</p>
+                        <p>C) ${q.options[2]}</p>
+                        <p>D) ${q.options[3]}</p>
+                        <p><strong>Correct: ${String.fromCharCode(65 + q.correct)}</strong></p>
+                    </div>
+                    <div class="question-actions">
+                        <button class="btn btn-danger btn-small" onclick="deleteQuestion(${q.id})">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('Delete this question?')) {
+                let allQuestions = JSON.parse(localStorage.getItem('questions') || '[]');
+                allQuestions = allQuestions.filter(q => q.id !== id);
+                localStorage.setItem('questions', JSON.stringify(allQuestions));
+                loadQuestions();
+            }
+        }
+
+        function loadResults() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const list = document.getElementById('resultsList');
+            const total = document.getElementById('totalParticipants');
+
+            total.textContent = results.length;
+
+            if (results.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No results yet.</p>';
+                return;
+            }
+
+            list.innerHTML = results.map(r => `
+                <div class="question-item">
+                    <div class="question-info">
+                        <h4>${r.name}</h4>
+                        <p>Score: <strong>${r.score}/${r.total}</strong> (${Math.round((r.score/r.total)*100)}%)</p>
+                        <p style="font-size: 0.8em; color: #999;">Completed: ${new Date(r.completedAt).toLocaleString()}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadLeaderboard() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const list = document.getElementById('leaderboardList');
+            const total = document.getElementById('leaderboardTotal');
+
+            total.textContent = results.length;
+
+            if (results.length === 0) {
+                list.innerHTML = '<p style="color: #999; text-align: center; padding: 30px;">No participants yet.</p>';
+                return;
+            }
+
+            const sorted = [...results].sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return new Date(a.completedAt) - new Date(b.completedAt);
+            });
+
+            list.innerHTML = sorted.map((r, index) => {
+                const percentage = Math.round((r.score / r.total) * 100);
+                let medal = '';
+                let badgeClass = '';
+
+                if (index === 0) {
+                    medal = MEDALS[0];
+                    badgeClass = 'first';
+                } else if (index === 1) {
+                    medal = MEDALS[1];
+                    badgeClass = 'second';
+                } else if (index === 2) {
+                    medal = MEDALS[2];
+                    badgeClass = 'third';
+                }
+
+                return `
+                    <div class="leaderboard-item">
+                        <div class="rank-badge ${badgeClass}">
+                            ${medal || '#' + (index + 1)}
+                        </div>
+                        <div class="leaderboard-info">
+                            <h4>${r.name}</h4>
+                            <p>${new Date(r.completedAt).toLocaleString()}</p>
+                        </div>
+                        <div class="leaderboard-score">
+                            <div class="score-value">${r.score}/${r.total}</div>
+                            <div class="percentage">${percentage}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // QUIZ FUNCTIONS
+        function generateMatrixCode() {
+            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            let code = '';
+            for (let i = 0; i < 1000; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function createMatrixBackground() {
+            const bg = document.getElementById('matrixBg');
+            const columns = Math.floor(window.innerWidth / 20);
+            let matrixText = '';
+            for (let i = 0; i < columns * 30; i++) {
+                matrixText += generateMatrixCode().substring(0, 1) + '\n';
+            }
+            bg.textContent = matrixText;
+        }
+
+        function initializeQuiz() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('questionCard').style.display = 'block';
+            document.getElementById('resultsScreen').style.display = 'none';
+            createMatrixBackground();
+
+            setTimeout(() => {
+                document.getElementById('hackedMsg').style.display = 'none';
+                document.getElementById('loadingText').style.display = 'none';
+                document.getElementById('jokeMsg').style.display = 'block';
+                document.getElementById('presentedBy').style.display = 'block';
+            }, 15000);
+
+            setTimeout(() => {
+                questions = JSON.parse(localStorage.getItem('questions') || '[]');
+
+                if (questions.length === 0) {
+                    alert('No questions available!');
+                    showPage('login');
+                    return;
+                }
+
+                answers = new Array(questions.length).fill(null);
+                score = 0;
+                currentQuestionIndex = 0;
+                loadQuestion();
+                document.getElementById('loadingScreen').style.display = 'none';
+            }, 20000);
+        }
+
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionText').textContent = question.text;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('totalQuestions').textContent = questions.length;
+
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = question.options.map((option, index) => {
+                const isSelected = answers[currentQuestionIndex] === index;
+                return `
+                    <label class="option ${isSelected ? 'selected' : ''}">
+                        <input type="radio" name="option" value="${index}" 
+                            ${isSelected ? 'checked' : ''} 
+                            onchange="selectAnswer(${index})">
+                        <label style="margin: 0;">${option}</label>
+                    </label>
+                `;
+            }).join('');
+
+            updateProgress();
+            updateButtons();
+        }
+
+        function selectAnswer(index) {
+            answers[currentQuestionIndex] = index;
+            loadQuestion();
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}`;
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextBtn').disabled = answers[currentQuestionIndex] === null;
+
+            if (currentQuestionIndex === questions.length - 1) {
+                document.getElementById('nextBtn').textContent = 'Submit Quiz ✓';
+            } else {
+                document.getElementById('nextBtn').textContent = 'Next →';
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (answers[currentQuestionIndex] === null) {
+                alert('Please select an answer!');
+                return;
+            }
+
+            if (currentQuestionIndex === questions.length - 1) {
+                submitQuiz();
+            } else {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            score = 0;
+            for (let i = 0; i < questions.length; i++) {
+                if (answers[i] === questions[i].correct) {
+                    score++;
+                }
+            }
+
+            const result = {
+                name: participantName,
+                score: score,
+                total: questions.length,
+                completedAt: new Date().toISOString()
+            };
+
+            let results = JSON.parse(localStorage.getItem('results') || '[]');
+            results.push(result);
+            localStorage.setItem('results', JSON.stringify(results));
+
+            displayResults();
+            document.getElementById('questionCard').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+        }
+
+        function displayResults() {
+            const percentage = Math.round((score / questions.length) * 100);
+            let message = '';
+
+            if (percentage === 100) {
+                message = "🎯 Perfect Score! You know them so well!";
+            } else if (percentage >= 80) {
+                message = "🌟 Excellent! You know them very well!";
+            } else if (percentage >= 60) {
+                message = "👍 Good! You know them pretty well!";
+            } else if (percentage >= 40) {
+                message = "📚 Not bad! You could learn more about them!";
+            } else {
+                message = "💭 Looks like you need to spend more time together!";
+            }
+
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('percentage').textContent = percentage + '%';
+            document.getElementById('resultMessage').textContent = message;
+            document.getElementById('detailTotal').textContent = questions.length;
+            document.getElementById('detailCorrect').textContent = score;
+            document.getElementById('detailWrong').textContent = questions.length - score;
+        }
+
+        function viewLeaderboard() {
+            const results = JSON.parse(localStorage.getItem('results') || '[]');
+            const sorted = [...results].sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return new Date(a.completedAt) - new Date(b.completedAt);
+            });
+
+            const content = document.getElementById('leaderboardContent');
+            if (sorted.length === 0) {
+                content.innerHTML = '<div style="text-align: center; color: #999; padding: 30px;">No scores yet.</div>';
+            } else {
+                content.innerHTML = sorted.map((r, index) => {
+                    const percentage = Math.round((r.score / r.total) * 100);
+                    let medal = '';
+                    let badgeClass = '';
+
+                    if (index === 0) {
+                        medal = MEDALS[0];
+                        badgeClass = 'first';
+                    } else if (index === 1) {
+                        medal = MEDALS[1];
+                        badgeClass = 'second';
+                    } else if (index === 2) {
+                        medal = MEDALS[2];
+                        badgeClass = 'third';
+                    }
+
+                    return `
+                        <div class="leaderboard-item">
+                            <div class="rank-badge ${badgeClass}">
+                                ${medal || '#' + (index + 1)}
+                            </div>
+                            <div class="leaderboard-info">
+                                <h4>${r.name}</h4>
+                                <div style="font-size: 0.9em; color: #666;">${percentage}% (${r.score}/${r.total})</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('leaderboardModal').style.display = 'block';
+        }
+
+        function closeLeaderboard() {
+            document.getElementById('leaderboardModal').style.display = 'none';
+        }
+
+        function logoutAdmin() {
+            currentRole = '';
+            showPage('login');
+        }
+
+        function backToHome() {
+            currentRole = '';
+            showPage('login');
         }
 
         window.onclick = function(event) {
             const adminModal = document.getElementById('adminModal');
             const participantModal = document.getElementById('participantModal');
-            if (event.target === adminModal) {
-                closeAdminLogin();
-            }
-            if (event.target === participantModal) {
-                closeParticipantLogin();
-            }
+            const leaderboardModal = document.getElementById('leaderboardModal');
+
+            if (event.target === adminModal) closeAdminLogin();
+            if (event.target === participantModal) closeParticipantLogin();
+            if (event.target === leaderboardModal) closeLeaderboard();
         }
     </script>
 </body>
